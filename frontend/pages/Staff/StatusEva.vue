@@ -1,25 +1,11 @@
 <template>
     <v-container fluid class="py-10">
                 <v-card>
-                    <v-sheet class="pa-4">
-                        <h1 class="text-h5 text-center font-weight-bold">Dashboard - Staff</h1><br>
-                        <v-row>
-                            <v-col cols="12" md="4" v-for="b in box" :key="b">
-                                <v-card elevation="4" class="pa-4">
-                                    <div class=" font-weight-bold">{{ b.title }}</div>
-                                    <div class="text-h3 ">{{ b.value }}</div>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="12" md="6" v-for="b in box2" :key="b">
-                                <v-card elevation="4" class="pa-4">
-                                    <div class=" font-weight-bold">{{ b.title }}</div>
-                                    <div class="text-h3 ">{{ b.value }}</div>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                        <br><br>
+                    <v-sheet class="pa-4"">
+                        <h1 class="text-h5 text-center font-weight-bold">สถานะการประเมินของผู้รับการประเมิน</h1>
+                    </v-sheet>
+                    <v-card-text>
+                        รายชื่อผู้รับการประเมิน
                         <v-table>
                             <thead>
                                 <tr>
@@ -27,9 +13,9 @@
                                     <th class="border text-center">ผู้รับการประเมิน</th>
                                     <th class="border text-center">วันที่ออกแบบการประเมิน</th>
                                     <th class="border text-center">รอบการประเมิน</th>
-                                    <th class="border text-center">คะแนนประเมินตนเอง</th>
+                                    <!-- <th class="border text-center">คะแนนประเมินของกรรมการ</th> -->
                                     <th class="border text-center">สถานะการประเมิน</th>
-                                    <th class="border text-center">รายละเอียด</th>
+                                    <!-- <th class="border text-center">รายละเอียด</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -38,13 +24,9 @@
                                     <td class="border text-center">{{ items.first_name }} {{ items.last_name }}</td>
                                     <td class="border text-center">{{ items.day_eva }}</td>
                                     <td class="border text-center">รอบการประเมินที่ {{ items.round_sys }} ปี {{ items.year_sys }}</td>
-                                    <td class="border text-center">{{ items.total_eva === null ? 'ผู้รับการประเมินยังไม่ได้ประเมิน' : items.total_eva }}</td>
+                                    <!-- <td class="border text-center">{{ items.total_commit === null ? 'กรรมการยังไม่ได้ประเมิน' : items.total_commit }}</td> -->
                                     <td class="border text-center">
                                         <v-btn class="text-white" size="small" :color="bg(items.status_eva)">{{ items.status_eva === 1 ? 'ประเมินตนเอง' : items.status_eva === 2 ? 'กรรมการประเมิน' : 'ประเมินเสร็จสิ้น' }}</v-btn>
-                                    </td>
-                                    <td class="border text-center">
-                                        <!-- <v-btn class="text-white" size="small" color="warning" @click="edit(items)">แก้ไข</v-btn>&nbsp; -->
-                                        <v-btn class="text-white" size="small" color="success" @click="go(items.id_eva)">รายละเอียด</v-btn>
                                     </td>
                                 </tr>
                                 <tr v-if="result.length === 0">
@@ -52,8 +34,6 @@
                                 </tr>
                             </tbody>
                         </v-table>
-                    </v-sheet>
-                    <v-card-text>
                     </v-card-text>
                 </v-card>
     </v-container>
@@ -66,17 +46,11 @@ import {api,staff} from '../../API/base'
 const token = process.client ? localStorage.getItem('token') : null
 
 const result = ref([])
-const box = ref([])
-const box2 = ref([])
 
 const fetch = async () => {
     try{
-        const res = await axios.get(`${api}/dash/staff`,{headers:{Authorization:`Bearer ${token}`}})
-        box.value = res.data.box
-        box2.value = res.data.box2
-        console.log('api',box.value)
-        const r = await axios.get(`${staff}/eva`,{headers:{Authorization:`Bearer ${token}`}})
-        result.value = r.data
+        const res = await axios.get(`${staff}/eva`,{headers:{Authorization:`Bearer ${token}`}})
+        result.value = res.data
     }catch(err){
         console.error('Error Fething',err)
     }
@@ -86,6 +60,10 @@ const bg = (status_eva:number) => {
     if(status_eva ===1) return 'error'
     if(status_eva ===2) return 'warning'
     if(status_eva ===3) return 'success'
+}
+
+const go = (id_eva:number) => { 
+    navigateTo({path: `Eva_commit-${id_eva}`})
 }
 
 onMounted(fetch)

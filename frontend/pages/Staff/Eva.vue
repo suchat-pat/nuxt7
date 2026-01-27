@@ -38,6 +38,7 @@
                                     <th class="border text-center">รอบการประเมิน</th>
                                     <th class="border text-center">สถานะการประเมิน</th>
                                     <th class="border text-center">จัดการ</th>
+                                    <th class="border text-center">เพิ่มกรรมการ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,6 +51,10 @@
                                     <td class="border text-center">
                                         <v-btn class="text-white" size="small" color="warning" @click="edit(items)">แก้ไข</v-btn>&nbsp;
                                         <v-btn class="text-white" size="small" color="error" @click="del(items.id_eva)">ลบ</v-btn>
+                                    </td>
+                                    <td class="border text-center">
+                                        <!-- <v-btn class="text-white" size="small" color="warning" @click="edit(items)">แก้ไข</v-btn>&nbsp; -->
+                                        <v-btn class="text-white" size="small" color="success" @click="go(items.id_eva)">เพิ่มกรรมการ</v-btn>
                                     </td>
                                 </tr>
                                 <tr v-if="result.length === 0">
@@ -133,7 +138,7 @@ const saveMember = async () =>{
 const del = async (id_eva:number) => {
     try{
         if(!confirm('ต้องการลบใช่หรือไม่')) return
-        await axios.delete(`${staff}/round_eva/${id_eva}`,{headers:{Authorization:`Bearer ${token}`}})
+        await axios.delete(`${staff}/eva/${id_eva}`,{headers:{Authorization:`Bearer ${token}`}})
         await fetch()
         await reset()
     }catch(err){
