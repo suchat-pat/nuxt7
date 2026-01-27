@@ -59,11 +59,14 @@ const roles = [
 
     //commit
     {title:'รายชื่อผู้รับการประเมิน',to:'/Committee/',role:'กรรมการประเมิน'},
+    {title:'ดำเนินการประเมิน',to:'/Committee/Show_eva',role:'กรรมการประเมิน'},
+    {title:'ดำเนินการประเมิน',to:'/Committee/Check_confirm',role:'กรรมการประเมิน'},
 
     //eva
     {title:'หน้าหลัก',to:'/Evaluatee/',role:'ผู้รับการประเมินผล'},
     {title:'แก้ไขข้อมูลส่วนตัว',to:'/Evaluatee/Edit_eva',role:'ผู้รับการประเมินผล'},
     {title:'แบบประเมินตนเอง',to:'/Evaluatee/Selfeva',role:'ผู้รับการประเมินผล'},
+    {title:'ตรวจสอบคะแนนประเมิน',to:'/Evaluatee/Check_score',role:'ผู้รับการประเมินผล'},
 ]
 const navitems = computed(() =>
     roles.filter((items) => items.role.includes(user.value.role))
