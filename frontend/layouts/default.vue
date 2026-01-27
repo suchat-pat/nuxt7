@@ -6,6 +6,7 @@
             <p>ผู้ใช้งาน : {{ user.first_name }} {{ user.last_name }} <br> {{ user.role }}</p>&nbsp;&nbsp;
             <v-btn @click="logout" class="bg-white">ออกจากระบบ</v-btn>&nbsp;
         </v-app-bar>
+        <ClientOnly>
         <v-navigation-drawer color="#404040" v-model="drawer" app :temporary="isMobile" :permanent="!isMobile">
             <v-list>
                 <v-list-item v-for="items in navitems" :key="items.title" :to="items.to">
@@ -15,6 +16,7 @@
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>
+        </ClientOnly>
         <v-main>
             <v-container fluid>
                 <NuxtPage />
@@ -54,6 +56,8 @@ const roles = [
 
     //eva
     {title:'หน้าหลัก',to:'/Evaluatee/',role:'ผู้รับการประเมินผล'},
+    {title:'แก้ไขข้อมูลส่วนตัว',to:'/Evaluatee/Edit_eva',role:'ผู้รับการประเมินผล'},
+    {title:'แบบประเมินตนเอง',to:'/Evaluatee/Selfeva',role:'ผู้รับการประเมินผล'},
 ]
 const navitems = computed(() =>
     roles.filter((items) => items.role.includes(user.value.role))
@@ -69,6 +73,8 @@ const fetchUser = async () =>{
         user.value = res.data
     }catch(err){
         console.error('Error GET Member!',err)
+        localStorage.removeItem('token')
+        await navigateTo('/',{replace:true})
     }
 }
 onMounted(fetchUser)
