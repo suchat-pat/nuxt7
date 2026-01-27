@@ -1,9 +1,58 @@
 <template>
-    1111
+    <v-container class="fill-height">
+        <v-row align="center" justify="center">
+            <v-col cols="12" md="6" lg="5">
+                <v-card elevation="10" rounded="lg" color="#7d0c14">
+                    <p class="text-white text-center font-weight-bold text-h5">NTC EVALUATION SYSTEM</p>
+                    <p class="text-white text-center font-weight-bold">ระบบประเมินบุคลากรวิทยาลัยเทคนิคน่าน</p>
+                    <v-container class="bg-white">
+                        <p class="text-center font-weight-bold text-h5">เข้าสู่ระบบ</p>
+                        <v-alert type="error" variant="tonal" v-if="error">{{ error }}</v-alert>
+                        <v-form @submit.prevent="Login">
+                            <v-text-field v-model="username" label="ชื่อผู้ใช้" prepend-inner-icon="mdi-account"></v-text-field>
+                            <v-text-field v-model="password" label="รหัสผ่าน" prepend-inner-icon="mdi-lock" type="password"></v-text-field>
+                            <v-select v-model="role" :items="g" label="ประเภทสมาชิก" prepend-inner-icon="mdi-account-group"></v-select>
+                            <v-btn class="text-white" block type="submit" color="#7d0c14">เข้าสู่ระบบ</v-btn>
+                        </v-form>
+                        <nuxt-link to="/regis" class="text-blue"><center>สมัครสมาชิก</center></nuxt-link>
+                    </v-container>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    layout: false
+})
 
+import auth from '../API/auth'
+
+const error = ref('')
+const username = ref('')
+const password = ref('')
+const role = ref('')
+const g = ['ฝ่ายบุคลากร','กรรมการประเมิน','ผู้รับการประเมินผล']
+
+const Login = async () => {
+    try{
+        const res = await auth.login({
+            username: username.value,
+            password: password.value,
+            role: role.value,
+        })
+        console.log('API Response : ',res.data)
+        localStorage.setItem('token',res.data.token)
+        const useRole = res.data.role
+        if(useRole === 'ฝ่ายบุคลากร') useRouter().push('/Staff')
+        else if(useRole === 'ผู้รับการประเมินผล') useRouter().push('/Evaluatee')
+        else if(useRole === 'กรรมการประเมิน') useRouter().push('/Committee')
+    }catch(err){
+        console.error('Error Login',err)
+        error.value = error.response?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
+    }
+}
 </script>
 
 <style scoped>
