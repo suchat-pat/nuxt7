@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../../db')
 const {verifyToken,requireRole} = require('../../middleware/authMiddleware')
+const bc = require('bcryptjs')
 
 router.get('/',verifyToken,requireRole('ผู้รับการประเมินผล'),async (req,res) => {
     try{
@@ -11,6 +12,23 @@ router.get('/',verifyToken,requireRole('ผู้รับการประเ�
     }catch(err){
         console.error('Error GET Member',err)
         res.status(500).json({message:'Error GET Member'})
+    }
+})
+
+router.put('/',verifyToken,requireRole('ผู้รับการประเมินผล'),async (req,res) => {
+    try{
+        const id_member = req.user.id_member
+        const {first_name,last_name,email,username,password} = req.body
+        if(password && password.trim()){
+            const hash = await bc.hash(password,10)
+            await db.query(`update tb_member set first_name=?,last_name=?,email=?,username=?,password=? where id_member='${id_member}'`,[first_name,last_name,email,username,hash])
+        }else{
+            await db.query(`update tb_member set first_name=?,last_name=?,email=?,username=? where id_member='${id_member}'`,[first_name,last_name,email,username])
+        }
+        res.json({message:'Update Sucess'})
+    }catch(err){
+        console.error('Error Update',err)
+        res.status(500).json({message:'Error Update'})
     }
 })
 

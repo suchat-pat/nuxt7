@@ -20,7 +20,7 @@ const {verifyToken,requireRole} = require('../../middleware/authMiddleware')
 // API สำหรับ Get ข้อมูล
 router.get('/',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
-        const [rows] = await db.query(`select * from tb_topic order by id_topic desc`)
+        const [rows] = await db.query(`select * from tb_eva,tb_member,tb_system where tb_eva.id_member = tb_member.id_member and tb_system.id_sys=tb_eva.id_sys and status_eva=1 order by id_eva desc`)
         res.json(rows)
     }catch(err){
         console.error('Error Get',err)
@@ -28,11 +28,22 @@ router.get('/',verifyToken,requireRole('ฝ่ายบุคลากร'),asyn
     }
 })
 
-// API สำหรับ Get ข้อมูล
-router.get('/:id_topic',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+// API สำหรับ Get ข้อมูล all
+router.get('/all',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
-        const {id_topic} = req.params
-        const [rows] = await db.query(`select * from tb_topic where id_topic='${id_topic}' order by id_topic desc`)
+        const [rows] = await db.query(`select * from tb_eva,tb_member,tb_system where tb_eva.id_member = tb_member.id_member and tb_system.id_sys=tb_eva.id_sys order by id_eva desc`)
+        res.json(rows)
+    }catch(err){
+        console.error('Error Get',err)
+        res.status(500).json({message:'Error Get'})
+    }
+})
+
+// API สำหรับ Get ข้อมูล where params
+router.get('/:id_eva',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+    try{
+        const {id_eva} = req.params
+        const [rows] = await db.query(`select * from tb_eva,tb_member,tb_system where tb_eva.id_eva='${id_eva}' and tb_eva.id_member = tb_member.id_member and tb_system.id_sys=tb_eva.id_sys order by id_eva desc`)
         if(rows.length === 0) return res.status(403).json({message:'Invalid Params'})
         res.json(rows)
     }catch(err){
@@ -44,8 +55,8 @@ router.get('/:id_topic',verifyToken,requireRole('ฝ่ายบุคลาก�
 // API สำหรับ Insert ข้อมูล
 router.post('/',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
-        const {name_topic} = req.body
-        const [rows] = await db.query(`insert into tb_topic (name_topic) values (?)`,[name_topic])
+        const {id_member,id_sys,day_eva} = req.body
+        const [rows] = await db.query(`insert into tb_eva (id_member,id_sys,day_eva,status_eva) values (?,?,?,?)`,[id_member,id_sys,day_eva,1])
         res.json({rows,message:'Insert Success'})
     }catch(err){
         console.error('Error Insert',err)
@@ -54,11 +65,11 @@ router.post('/',verifyToken,requireRole('ฝ่ายบุคลากร'),asy
 })
 
 // API สำหรับ Update ข้อมูล
-router.put('/:id_topic',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+router.put('/:id_eva',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
-        const {id_topic} = req.params
-        const {name_topic} = req.body
-        const [rows] = await db.query(`update tb_topic set name_topic=? where id_topic='${id_topic}'`,[name_topic])
+        const {id_eva} = req.params
+        const {id_member,id_sys,day_eva} = req.body
+        const [rows] = await db.query(`update tb_eva set id_member=?,id_sys=?,day_eva=?,status_eva=? where id_eva='${id_eva}'`,[id_member,id_sys,day_eva,1])
         res.json({rows,message:'Update Success'})
     }catch(err){
         console.error('Error Update',err)
@@ -67,10 +78,10 @@ router.put('/:id_topic',verifyToken,requireRole('ฝ่ายบุคลาก�
 })
 
 // API สำหรับ Delete ข้อมูล
-router.delete('/:id_topic',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+router.delete('/:id_eva',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
-        const {id_topic} = req.params
-        const [rows] = await db.query(`delete from tb_topic where id_topic='${id_topic}'`)
+        const {id_eva} = req.params
+        const [rows] = await db.query(`delete from tb_eva where id_eva='${id_eva}'`)
         res.json({rows,message:'Delete Success'})
     }catch(err){
         console.error('Error Delete',err)
