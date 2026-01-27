@@ -24,5 +24,12 @@ app.use('/api/profile',profile)
 
 // =============
 
+//eva
+const edit_eva = require('./routes/Eva/edit_eva')
+app.use('/api/Eva/edit_eva',edit_eva)
+
+const selfeva = require('./routes/Eva/selfeva')
+app.use('/api/Eva/selfeva',selfeva)
+
 app.use( (req,res) => res.status(404).json({message:'ปิดปรับปรุง!'}) )
 app.listen(3001 , () => console.log('Server Running On Port 3001'))
