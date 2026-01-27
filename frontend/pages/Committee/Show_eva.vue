@@ -24,8 +24,11 @@
                                     <td class="border text-center">{{ items.last_name }}</td>
                                     <td class="border text-center">{{ items.day_eva }}</td>
                                     <td class="border text-center">รอบการประเมินที่ {{ items.round_sys }} ปี {{ items.year_sys }}</td>
-                                    <td class="border text-center">{{ items.status_eva === 1 ? 'ประเมินตนเอง' : items.status_eva === 2 ? 'กรรมการประเมิน' : 'ประเมินเสร็จสิ้น' }}</td>
-                                    <td class="border text-center"><v-btn class="text-white" size="small" color="blue" @click="go(items.id_eva)">ประเมิน</v-btn></td>
+                                    <td class="border text-center">{{ items.status_eva === 1 ? 'ประเมินตนเอง' : items.status_commit === 'y' ? 'ประเมินสำเร็จ' : items.status_eva === 2 ? 'รอกรรมการประเมิน' : 'ประเมินเสร็จสิ้น' }}</td>
+                                    <td class="border text-center">
+                                        <v-btn v-if="status_commit === 'y'" class="text-white" size="small" color="success" >ประเมินแล้ว</v-btn>
+                                        <v-btn v-else class="text-white" size="small" color="blue" @click="go(items.id_eva)">ประเมิน</v-btn>
+                                    </td>
                                 </tr>
                                 <tr v-if="result.length === 0">
                                     <td class="text-center border" colspan="10">ไม่พบข้อมูล</td>
