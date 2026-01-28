@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar color="#7d0c14" class="py-2">
+        <v-app-bar color="#7d0c14" class="py-2 noP">
             <v-app-bar-nav-icon @click="drawer = !drawer" variant="text"></v-app-bar-nav-icon>
             <v-toolbar-title>ระบบประเมินบุคลากรวิทยาลัยเทคนิคน่าน</v-toolbar-title>
             <p>ผู้ใช้งาน : {{ user.first_name }} {{ user.last_name }} <br> {{ user.role }}</p>&nbsp;&nbsp;
@@ -50,6 +50,12 @@ const roles = [
     {title:'จัดการตัวชี้วัด',to:'/Staff/Indicate',role:'ฝ่ายบุคลากร'},
     {title:'รอบการประเมิน',to:'/Staff/Round_eva',role:'ฝ่ายบุคลากร'},
     {title:'จัดการแบบประเมิน',to:'/Staff/Eva',role:'ฝ่ายบุคลากร'},
+    {title:'ผลสรุปการประเมินของผู้รับการประเมินผล',to:'/Staff/Score_evaList',role:'ฝ่ายบุคลากร'},
+    {title:'ผลสรุปการประเมินของกรรมการประเมิน',to:'/Staff/Score_commitList',role:'ฝ่ายบุคลากร'},
+    {title:'สถานะการประเมินของผู้รับการประเมิน',to:'/Staff/StatusEva',role:'ฝ่ายบุคลากร'},
+    {title:'สถานะการประเมินของกรรมการ',to:'/Staff/StatusCommit',role:'ฝ่ายบุคลากร'},
+    {title:'คู่มือสำหรับการประเมิน',to:'/Staff/Document',role:'ฝ่ายบุคลากร'},
+    {title:'รายงานผล',to:'/Staff/Report',role:'ฝ่ายบุคลากร'},
 
     //commit
     {title:'รายชื่อผู้รับการประเมิน',to:'/Committee/',role:'กรรมการประเมิน'},
@@ -85,4 +91,9 @@ onMounted(fetchUser)
 
 <style scoped>
 
+@media print {
+    .v-btn,.noP{
+        display: none;
+    }
+}
 </style>

@@ -39,6 +39,28 @@ router.get('/all',verifyToken,requireRole('ฝ่ายบุคลากร'),a
     }
 })
 
+// API สำหรับ Get ข้อมูล y
+router.get('/y',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+    try{
+        const [rows] = await db.query(`select * from tb_eva,tb_member,tb_system where tb_eva.id_member = tb_member.id_member and tb_system.id_sys=tb_eva.id_sys and status_eva=3 order by id_eva desc`)
+        res.json(rows)
+    }catch(err){
+        console.error('Error Get',err)
+        res.status(500).json({message:'Error Get'})
+    }
+})
+
+// API สำหรับ Get ข้อมูล n
+router.get('/n',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
+    try{
+        const [rows] = await db.query(`select * from tb_eva,tb_member,tb_system where tb_eva.id_member = tb_member.id_member and tb_system.id_sys=tb_eva.id_sys and status_eva!=3 order by id_eva desc`)
+        res.json(rows)
+    }catch(err){
+        console.error('Error Get',err)
+        res.status(500).json({message:'Error Get'})
+    }
+})
+
 // API สำหรับ Get ข้อมูล where params
 router.get('/:id_eva',verifyToken,requireRole('ฝ่ายบุคลากร'),async (req,res) => {
     try{
