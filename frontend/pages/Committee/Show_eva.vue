@@ -23,10 +23,10 @@
                                     <td class="border text-center">{{ items.first_name }}</td>
                                     <td class="border text-center">{{ items.last_name }}</td>
                                     <td class="border text-center">{{ items.day_eva }}</td>
-                                    <td class="border text-center">รอบการประเมินที่ {{ items.round_sys }} ปี {{ items.year_sys }}</td>
+                                    <td class="border text-center">รอบการประเมินที่ {{ items.round_sys }} ปี {{ items.year_sys }}</td>	
                                     <td class="border text-center">{{ items.status_eva === 1 ? 'ประเมินตนเอง' : items.status_commit === 'y' ? 'ประเมินสำเร็จ' : items.status_eva === 2 ? 'รอกรรมการประเมิน' : 'ประเมินเสร็จสิ้น' }}</td>
                                     <td class="border text-center">
-                                        <v-btn v-if="status_commit === 'y'" class="text-white" size="small" color="success" >ประเมินแล้ว</v-btn>
+                                        <v-btn v-if="items.status_commit === 'y'" class="text-white" size="small" color="success" >ประเมินแล้ว</v-btn>
                                         <v-btn v-else class="text-white" size="small" color="blue" @click="go(items.id_eva)">ประเมิน</v-btn>
                                     </td>
                                 </tr>
