@@ -2,7 +2,7 @@
     <v-container fluid class="py-10">
                 <v-card>
                     <v-sheet class="pa-4">
-                        <h1 class="text-h5 font-weight-bold">ดำเนินการประเมิน</h1>
+                        <h1 class="text-h5 font-weight-bold">ยืนยันผลการประเมิน</h1>
                     </v-sheet>
                     <v-card-text>
                         <v-table>
@@ -14,7 +14,7 @@
                                     <th class="border text-center">วันที่ออกแบบการประเมิน</th>
                                     <th class="border text-center">รอบการประเมิน</th>
                                     <th class="border text-center">ผลการประเมิน</th>
-                                    <th class="border text-center">ดำเนินการประเมิน</th>
+                                    <th class="border text-center">ยืนยันผลการประเมิน</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -25,7 +25,10 @@
                                     <td class="border text-center">{{ items.day_eva }}</td>
                                     <td class="border text-center">รอบการประเมินที่ {{ items.round_sys }} ปี {{ items.year_sys }}</td>
                                     <td class="border text-center"><v-btn class="text-white" size="small" color="blue" @click="check(items.id_eva)">ตรวจสอบ</v-btn></td>
-                                    <td class="border text-center"><v-btn class="text-white" size="small" color="blue" @click="go(items.id_eva)">ประเมิน</v-btn></td>
+                                    <td class="border text-center">
+                                        <v-btn v-if="items.signature" class="text-white" size="small" color="blue" @click="go(items.id_eva)">ยืนยันผลแล้ว</v-btn>
+                                        <v-btn v-else class="text-white" size="small" color="blue" @click="go(items.id_eva)">ยืนยันผล</v-btn>
+                                    </td>
                                 </tr>
                                 <tr v-if="result.length === 0">
                                     <td class="text-center border" colspan="10">ไม่พบข้อมูล</td>
@@ -47,7 +50,7 @@ const result = ref([])
 
 const fetch = async () => {
     try{
-        const res = await axios.get(`${commit}/show_eva`,{headers:{Authorization:`Bearer ${token}`}})
+        const res = await axios.get(`${commit}/check_confirm`,{headers:{Authorization:`Bearer ${token}`}})
         result.value = res.data
     }catch(err){
         console.error('Error Fething',err)
@@ -55,7 +58,7 @@ const fetch = async () => {
 }
 
 const go = (id_eva:number) => { 
-    navigateTo({path: `/Committee/Save_score${id_eva}`})
+    navigateTo({path: `/Committee/Signature${id_eva}`})
 }
 
 const check = (id_eva:number) => { 
